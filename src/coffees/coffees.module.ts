@@ -1,12 +1,65 @@
-import { Module } from '@nestjs/common';
-import { AppController } from 'src/app.controller';
-import { AppService } from 'src/app.service';
+import { Injectable, Module, Scope } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoffeesController } from './coffees.controller';
+import { CoffeesService } from './coffees.service';
+import { Coffee } from './entities/coffee.entity';
+import { Flavor } from './entities/flavor.entity';
+import { Event } from 'src/events/entities/event.entity';
+import { COFFEE_BRANDS } from './coffees.constants';
+// import { Connection } from 'typeorm';
+
+// class MockCoffeesService {}
+// id-1:
+// class ConfigService {}
+// class DevelopmentConfigService {}
+// class ProductionConfigService {}
+// id-2:
+// @Injectable()
+// export class CoffeeBrandsFactory {
+//   create() {
+//     /* ... DO SOMETHING ... */
+//     return ['buddy brew', 'nescafe'];
+//   }
+// }
 
 @Module({
-  imports: [CoffeesModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event])],
+  controllers: [CoffeesController],
+  providers: [
+    CoffeesService,
+    // CoffeeBrandsFactory,
+    {
+      provide: COFFEE_BRANDS,
+      // useValue: ['buddy brew', 'nescafe'], // String-valued token
+      useFactory: () => ['buddy brew', 'nescafe'], // The actual provider will be supplied by the value returned from a factory function.
+      // scope: Scope.TRANSIENT,
+      // id-3:
+      // useFactory: async (connection: Connection): Promise<string[]> => {
+      //   // const coffeeBrands = await connection.query('SELECT * ...');
+      //   const coffeeBrands = await Promise.resolve(['buddy brew', 'nescafe']);
+      //   return coffeeBrands;
+      // },
+      // inject: [Connection],
+      // id-2:
+      // useFactory: (brandsFactory: CoffeeBrandsFactory) =>
+      //   brandsFactory.create(),
+      // inject: [CoffeeBrandsFactory],
+    },
+    // id-1:
+    // {
+    //   provide: CoffeesService,
+    //   // useClass: CoffeesService,
+    //   useValue: new MockCoffeesService(), //The useValue syntax is useful for injecting a constant value, putting an external library into the Nest container, or replacing a real implementation with a mock object.
+    // },
+    // {
+    //   provide: ConfigService,
+    //   useClass:
+    //     process.env.NODE_ENV === 'development'
+    //       ? DevelopmentConfigService
+    //       : ProductionConfigService,
+    // },
+  ],
+  exports: [CoffeesService],
 })
 // controllers: which you can think of as our API Routes, that we want this module to instantiate.
 // exports: Here we can list providers within this current module that should be made available anywhere this module is imported
