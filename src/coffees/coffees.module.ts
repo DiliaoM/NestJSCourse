@@ -6,6 +6,8 @@ import { Coffee } from './entities/coffee.entity';
 import { Flavor } from './entities/flavor.entity';
 import { Event } from 'src/events/entities/event.entity';
 import { COFFEE_BRANDS } from './coffees.constants';
+import { ConfigModule } from '@nestjs/config';
+import coffeesConfig from './config/coffees.config';
 // import { Connection } from 'typeorm';
 
 // class MockCoffeesService {}
@@ -23,28 +25,31 @@ import { COFFEE_BRANDS } from './coffees.constants';
 // }
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event])],
+  imports: [
+    TypeOrmModule.forFeature([Coffee, Flavor, Event]),
+    ConfigModule.forFeature(coffeesConfig),
+  ],
   controllers: [CoffeesController],
   providers: [
     CoffeesService,
     // CoffeeBrandsFactory,
-    {
-      provide: COFFEE_BRANDS,
-      // useValue: ['buddy brew', 'nescafe'], // String-valued token
-      useFactory: () => ['buddy brew', 'nescafe'], // The actual provider will be supplied by the value returned from a factory function.
-      // scope: Scope.TRANSIENT,
-      // id-3:
-      // useFactory: async (connection: Connection): Promise<string[]> => {
-      //   // const coffeeBrands = await connection.query('SELECT * ...');
-      //   const coffeeBrands = await Promise.resolve(['buddy brew', 'nescafe']);
-      //   return coffeeBrands;
-      // },
-      // inject: [Connection],
-      // id-2:
-      // useFactory: (brandsFactory: CoffeeBrandsFactory) =>
-      //   brandsFactory.create(),
-      // inject: [CoffeeBrandsFactory],
-    },
+    // {
+    //   provide: COFFEE_BRANDS,
+    //   // useValue: ['buddy brew', 'nescafe'], // String-valued token
+    //   useFactory: () => ['buddy brew', 'nescafe'], // The actual provider will be supplied by the value returned from a factory function.
+    //   // scope: Scope.TRANSIENT,
+    //   // id-3:
+    //   // useFactory: async (connection: Connection): Promise<string[]> => {
+    //   //   // const coffeeBrands = await connection.query('SELECT * ...');
+    //   //   const coffeeBrands = await Promise.resolve(['buddy brew', 'nescafe']);
+    //   //   return coffeeBrands;
+    //   // },
+    //   // inject: [Connection],
+    //   // id-2:
+    //   // useFactory: (brandsFactory: CoffeeBrandsFactory) =>
+    //   //   brandsFactory.create(),
+    //   // inject: [CoffeeBrandsFactory],
+    // },
     // id-1:
     // {
     //   provide: CoffeesService,
