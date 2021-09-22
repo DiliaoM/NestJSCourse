@@ -5,29 +5,51 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
+  Req,
+  Res,
+  SetMetadata,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
+import { ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Request, response } from 'express';
+import { resolve } from 'path/posix';
+import { Protocol } from 'src/common/decorators/protocol.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 
+// @UsePipes(new ValidationPipe())
+@ApiTags('coffees') // group resources
 @Controller('coffees')
 export class CoffeesController {
   constructor(
     private readonly coffeesService: CoffeesService,
     @Inject(REQUEST) private readonly request: Request,
   ) {
-    console.log('CoffeesController created');
+    // console.log('CoffeesController created');
   }
 
+  // @UsePipes(ValidationPipe)
+  // @SetMetadata('isPublic', true)
+  // @ApiResponse({ status: 403, description: 'Forbidden.' }) // Long hand version
+  @ApiForbiddenResponse({ description: 'Forbidden.' }) //Short hand version
+  @Public()
   @Get()
-  findAll(@Query() paginationQuery: PaginationQueryDto) {
+  async findAll(
+    @Protocol('https') protocol: string,
+    @Query() paginationQuery: PaginationQueryDto,
+  ) {
     // const { limit, offset } = paginationQuery;
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+    console.log(protocol);
     return this.coffeesService.findAll(paginationQuery);
     // return `This action returns all coffees. Limit: ${limit}, offset: ${offset}`;
   }
@@ -40,10 +62,12 @@ export class CoffeesController {
     
     🚨 Remember to use this with caution (as our code can become platform-dependent)
   */
+  @Public()
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     // return `This action returns #${id} coffee`;
-    console.log(typeof id);
+    console.log(id);
+    // console.log(typeof id);
     return this.coffeesService.findOne('' + id);
   }
 
@@ -57,7 +81,10 @@ export class CoffeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
+  update(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateCoffeeDto: UpdateCoffeeDto,
+  ) {
     // return `This action updates #${id} coffee`;
     return this.coffeesService.update(id, updateCoffeeDto);
   }
