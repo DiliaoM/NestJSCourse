@@ -6,7 +6,7 @@ import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { Coffee } from './entities/coffee.entity';
 import { Flavor } from './entities/flavor.entity';
-import { Event } from 'src/events/entities/event.entity';
+import { Event } from '../events/entities/event.entity';
 // import { COFFEE_BRANDS } from './coffees.constants';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import coffeesConfig from './config/coffees.config';
@@ -18,14 +18,15 @@ export class CoffeesService {
     private readonly coffeeRepository: Repository<Coffee>,
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
-    private readonly connection: Connection,
+
     // @Inject(COFFEE_BRANDS) coffeeBrands: string[], // Injecting string-valued token into CoffeeService
     // id-3:
     //private readonly configService: ConfigService, // 👈
-    @Inject(coffeesConfig.KEY)
-    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
+    // @Inject(coffeesConfig.KEY)
+    // private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
+    private readonly connection: Connection,
   ) {
-    console.log(coffeesConfiguration.foo);
+    // console.log(coffeesConfiguration.foo);
     // id-3:
     // const coffeesConfig = this.configService.get('coffees.foo');
     // console.log(coffeesConfig);
