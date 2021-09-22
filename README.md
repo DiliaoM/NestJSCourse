@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository. This is the final code following the course ["NestJS Fundamentals Course"](https://courses.nestjs.com/).
 
 ## Installation
 
@@ -72,6 +72,3 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-# NestJSCourse
-
-This is the final code following the course ["NestJS Fundamentals Course"](https://courses.nestjs.com/).
